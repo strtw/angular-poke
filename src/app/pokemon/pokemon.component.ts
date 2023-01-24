@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormControl } from '@angular/forms';
+import { AnimateTimings } from '@angular/animations';
 
 
 @Component({
@@ -17,6 +18,8 @@ export class PokemonComponent {
   pokemonTypes = new Set();
   types = new FormControl('');
   typesList: any;
+  userSelections: any;
+  filteredResults:any;
 
   compare( a:any, b:any ) {
     if ( a.id > b.id ){
@@ -36,10 +39,33 @@ export class PokemonComponent {
       }
      }
   }
+
+  filterResults(){
+    const filterByType = (pokemon:any) =>{
+      
+      let currentPokemonTypes = new Set();
+    
+      for(let type of pokemon.types){
+          currentPokemonTypes.add(type.type.name);
+      }
+   
+      for(let type of this.userSelections){
+        if(!currentPokemonTypes.has(type)){
+          return false
+        }
+        
+      }
+      return true;
+    }
+
+    this.filteredResults = this.appPokemonData.filter(filterByType)
+
+  }
   
 
   getIndivdualPokeManData(num: number, maxNum:number){
-    this.http.get<any>(`https://pokeapi.co/api/v2/pokemon/${num}`).subscribe(data => {
+    const endpoint = `https://pokeapi.co/api/v2/pokemon/${num}`;
+    this.http.get<any>(endpoint).subscribe(data => {
       data.id = num;
       this.appPokemonData.push(data);
       this.handlePokemonTypeData(data);
