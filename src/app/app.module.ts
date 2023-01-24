@@ -5,6 +5,11 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { PokemonComponent } from './pokemon/pokemon.component';
 import { MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import {MatSelectModule} from '@angular/material/select';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 @NgModule({
   declarations: [
@@ -15,7 +20,12 @@ import { MatTableModule } from '@angular/material/table';
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    MatTableModule
+    MatTableModule, 
+    MatFormFieldModule, 
+    MatSelectModule, 
+    FormsModule,
+    ReactiveFormsModule,
+    BrowserAnimationsModule
    ],
   providers: [],
   bootstrap: [AppComponent]

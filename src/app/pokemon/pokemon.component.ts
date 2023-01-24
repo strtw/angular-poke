@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { FormControl } from '@angular/forms';
 
 
 @Component({
@@ -13,9 +14,11 @@ export class PokemonComponent {
   appPokemonData: any;
   displayedColumns: string[] = ['name'];
   isLoaded = false;
+  pokemonTypes = new Set();
+  types = new FormControl('');
+  typesList: any;
 
   compare( a:any, b:any ) {
-    
     if ( a.id > b.id ){
       return -1;
     }
@@ -24,20 +27,29 @@ export class PokemonComponent {
     }
     return 0;
   }
+
+  handlePokemonTypeData(pokemon: { types: any; }){
+     for(let type of pokemon.types){
+      let typeName = type.type.name;
+      if(!this.pokemonTypes.has(typeName)){
+        this.pokemonTypes.add(typeName)
+      }
+     }
+  }
   
 
-  getIndivdualPokeManData(num: number){
+  getIndivdualPokeManData(num: number, maxNum:number){
     this.http.get<any>(`https://pokeapi.co/api/v2/pokemon/${num}`).subscribe(data => {
       data.id = num;
       this.appPokemonData.push(data);
-      if(this.appPokemonData.length === 20){
+      this.handlePokemonTypeData(data);
+      if(this.appPokemonData.length === maxNum){
         this.appPokemonData.sort( this.compare );
+        this.isLoaded = true;
+        this.typesList = Array.from(this.pokemonTypes)
       }
   })
   }
-
-
-  
 
     ngOnInit() {      
         // Simple GET request with response type <any>
@@ -47,11 +59,9 @@ export class PokemonComponent {
             const numPokemon = data.results.length;
             this.appPokemonData = [];
             for(let i = 1; i <= numPokemon; i++){
-              this.getIndivdualPokeManData(i);
+              this.getIndivdualPokeManData(i,numPokemon);
             }
             console.log(this.appPokemonData);
-            this.isLoaded = true;
         })
-    }
-    
+    }  
 }

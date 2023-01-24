@@ -1,5 +1,12 @@
 {{ '' // TODO: fix appPokemonData check. Need a way for the loaded value to change once all the http calls are fulfilled }}
 
+<mat-form-field appearance="fill">
+    <mat-label>Types</mat-label>
+    <mat-select [formControl]="types" multiple>
+      <mat-option *ngFor="let type of typesList" [value]="type">{{type}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
 <table *ngIf="appPokemonData.length == 20" mat-table [dataSource]="appPokemonData"> 
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef> Name </th>
