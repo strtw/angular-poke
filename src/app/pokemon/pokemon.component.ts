@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormControl } from '@angular/forms';
-import { AnimateTimings } from '@angular/animations';
-
 
 @Component({
   selector: 'app-pokemon',
@@ -31,7 +29,7 @@ export class PokemonComponent {
     return 0;
   }
 
-  handlePokemonTypeData(pokemon: { types: any; }){
+  addPokemonTypeToFilterSetIf(pokemon: { types: any; }){
      for(let type of pokemon.types){
       let typeName = type.type.name;
       if(!this.pokemonTypes.has(typeName)){
@@ -40,16 +38,16 @@ export class PokemonComponent {
      }
   }
 
-  filterResults(){
-    const filterByType = (pokemon:any) =>{
+  filterByType = (userSelections:any) =>{
       
+    return function (pokemon:any){
       let currentPokemonTypes = new Set();
-    
+  
       for(let type of pokemon.types){
           currentPokemonTypes.add(type.type.name);
       }
    
-      for(let type of this.userSelections){
+      for(let type of userSelections){
         if(!currentPokemonTypes.has(type)){
           return false
         }
@@ -57,18 +55,20 @@ export class PokemonComponent {
       }
       return true;
     }
+  }
 
-    this.filteredResults = this.appPokemonData.filter(filterByType)
 
+  filterResults(){
+    this.filteredResults = this.appPokemonData.filter(this.filterByType(this.userSelections))
   }
   
 
   getIndivdualPokeManData(num: number, maxNum:number){
     const endpoint = `https://pokeapi.co/api/v2/pokemon/${num}`;
     this.http.get<any>(endpoint).subscribe(data => {
-      data.id = num;
+      //data.id = num;
       this.appPokemonData.push(data);
-      this.handlePokemonTypeData(data);
+      this.addPokemonTypeToFilterSetIf(data);
       if(this.appPokemonData.length === maxNum){
         this.appPokemonData.sort( this.compare );
         this.isLoaded = true;
@@ -78,7 +78,6 @@ export class PokemonComponent {
   }
 
     ngOnInit() {      
-        // Simple GET request with response type <any>
         this.http.get<any>('https://pokeapi.co/api/v2/pokemon/').subscribe(data => {
             this.pokemonNameEndpointData = data;
            // console.log(this.pokemonNameEndpointData);
@@ -87,7 +86,6 @@ export class PokemonComponent {
             for(let i = 1; i <= numPokemon; i++){
               this.getIndivdualPokeManData(i,numPokemon);
             }
-            console.log(this.appPokemonData);
         })
     }  
 }
