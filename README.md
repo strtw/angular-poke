@@ -1,3 +1,19 @@
+
+
+# Requirements
+
+- Create SPA and display results in a table. - Utilized material components for the table and filter selector. 
+
+- Display the Pokemon results in reverse order on the page.
+
+- Implement the REST call asynchronously - Used the HTTP Client which is asynchronous
+
+- Add a filter to the page which gives users the option to display only certain Pokemon. You can filter based on whatever criteria you want, such as Pokemon type (fire, grass, water, electric, etc.) or even your favorites and non-favorites.
+
+- How can you confirm your code works? - Implemented unit tests. 
+
+
+
 # Pokemon
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.1.2.
