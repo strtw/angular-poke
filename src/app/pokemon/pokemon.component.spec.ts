@@ -7,10 +7,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+
 describe('PokemonComponent', () => {
   let component: PokemonComponent;
   let fixture: ComponentFixture<PokemonComponent>;
-  let pokemonTypes = new Set();
   const pokemon = [{"types": [
     {
     "slot": 1,
@@ -91,11 +91,19 @@ describe('PokemonComponent', () => {
   });
 
   it('should reverse sort correctly', () => {
-    pokemon.sort(component.compare);
+    pokemon.sort(component.compareById);
     expect(pokemon[0].name).toBe("ivysaur")})
 
   it('should add correct number of types to filter type set', () => {
     component.addPokemonTypeToFilterSetIf(pokemon[0])
     expect(component.pokemonTypes.size).toBe(2)
   });  
+
+  it('should set the loaded flag true when the pokemon data is loaded', () => {
+    //TODO write this test
+    //getIndivdualPokeManData(1,1)
+    // need to mock http service
+  });  
+
+  
 });

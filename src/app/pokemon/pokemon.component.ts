@@ -19,7 +19,7 @@ export class PokemonComponent {
   userSelections: any;
   filteredResults:any;
 
-  compare( a:any, b:any ) {
+  compareById( a:any, b:any ) {
     if ( a.id > b.id ){
       return -1;
     }
@@ -57,7 +57,6 @@ export class PokemonComponent {
     }
   }
 
-
   filterResults(){
     this.filteredResults = this.appPokemonData.filter(this.filterByType(this.userSelections))
   }
@@ -66,26 +65,25 @@ export class PokemonComponent {
   getIndivdualPokeManData(num: number, maxNum:number){
     const endpoint = `https://pokeapi.co/api/v2/pokemon/${num}`;
     this.http.get<any>(endpoint).subscribe(data => {
-      //data.id = num;
       this.appPokemonData.push(data);
       this.addPokemonTypeToFilterSetIf(data);
-      if(this.appPokemonData.length === maxNum){
-        this.appPokemonData.sort( this.compare );
+      //TODO break this out into a separate function to separate concerns, or set a flag and then subscribe to that flag
+      if(this.appPokemonData.length === maxNum){//if all pokemon data has been loaded
+        this.appPokemonData.sort( this.compareById );//sort pokemon by id
+        this.typesList = Array.from(this.pokemonTypes);//convert set to array
         this.isLoaded = true;
-        this.typesList = Array.from(this.pokemonTypes)
       }
   })
   }
 
-    ngOnInit() {      
-        this.http.get<any>('https://pokeapi.co/api/v2/pokemon/').subscribe(data => {
-            this.pokemonNameEndpointData = data;
-           // console.log(this.pokemonNameEndpointData);
-            const numPokemon = data.results.length;
-            this.appPokemonData = [];
-            for(let i = 1; i <= numPokemon; i++){
-              this.getIndivdualPokeManData(i,numPokemon);
-            }
-        })
-    }  
+  ngOnInit() {      
+      this.http.get<any>('https://pokeapi.co/api/v2/pokemon/').subscribe(data => {
+          this.pokemonNameEndpointData = data;
+          const numPokemon = data.results.length;
+          this.appPokemonData = [];
+          for(let i = 1; i <= numPokemon; i++){
+            this.getIndivdualPokeManData(i,numPokemon);
+          }
+      })
+  }  
 }
